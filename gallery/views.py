@@ -1,6 +1,5 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from .models import Art_Pieces
-# Create your views here.
 
 
 def all_art_pieces(request):
@@ -14,3 +13,17 @@ def all_art_pieces(request):
     }
 
     return render(request, 'gallery/gallery.html', context)
+
+
+def art_detail(request, art_piece_id):
+    """ A view to show individual art pieces full details"""
+
+    # to return all art pieces from the db.:
+    art = get_object_or_404(Art_Pieces, pk=art_piece_id)
+    # we add this to the context so are art
+    # piece details are available on template
+    context = {
+        'art': art,
+    }
+
+    return render(request, 'gallery/art_detail.html', context)

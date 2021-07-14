@@ -1,5 +1,5 @@
 from django.db import models
-from directory.models import Artist
+from directory.models import Person, Artist
 
 
 class Art_Pieces(models.Model):
@@ -18,6 +18,7 @@ class Art_Pieces(models.Model):
         (LOCATIONS, 'Location'),
         (ANIMAL, 'Animal'),
     ]
+
     artist = models.ForeignKey(Artist, on_delete=models.CASCADE)
     # TODO: why CASCADE artist foreign key on delete instead of SET_NULL???
     # category = models.ForeignKey('Artwork_Cat', on_delete=models.CASCADE, 
@@ -41,4 +42,28 @@ class Art_Pieces(models.Model):
         return self.title
 
 
-# TODO: Add comment model here or in a new app "Blog" (maybe?)
+class Comment(models.Model):
+
+    art_piece = models.ForeignKey(Art_Pieces, on_delete=models.CASCADE)
+    date = models.DateTimeField('Comment Date')
+    text = models.TextField('Comment')
+    person = models.ForeignKey(Person, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.text
+
+
+class Rate(models.Model):
+
+    class Rating(models.IntegerChoices):
+        POOR = 1
+        OK = 2
+        GOOD = 3
+        VERY_GOOD = 4
+        EXCELLENT = 5
+
+    art_piece = models.ForeignKey(Art_Pieces, on_delete=models.CASCADE)
+    rating = models.IntegerField(choices=Rating.choices)
+
+    def __str__(self):
+        return self.art_piece
