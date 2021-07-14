@@ -25,12 +25,16 @@
     crossorigin="anonymous" referrerpolicy="no-referrer" />
   <!--Favicon-->
   <link rel="icon" href="data:;base64,iVBORw0KGgo=">
+  <!--path to ourr CSS file-->
+  <link rel="stylesheet" href="{% static 'css/base.css' %}">
   {% endblock %}
 
   {% block extra_css %}
   {% endblock %}
 
   {% block core_jss %}
+  <!--font awesome KIT-->
+  <script src="https://kit.fontawesome.com/a4969cc8d5.js" crossorigin="anonymous"></script>
   <!--JQuery CDN-->
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
     integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous">
@@ -49,13 +53,13 @@
 
 <body>
   <header class="container-fluid fixed-top">
-    <div class="row">
-      <div class="col-12 col-lg-4 my-auto text-centre text-lg-left">
-        <a href="{% url 'home' %}" class="nav-item main-logo">
-          <h3 class="logo-font text-black">All Art Stand</h3>
+    <div id="topnav" class="row bg-white pt-lg-2 d-non d-lg-flex">
+      <div class="col-12 col-lg-4 my-auto text-center text-lg-left">
+        <a href="{% url 'home' %}" class="nav-item main-logo-link">
+          <h3 class="logo-font text-black my-0">All Art Stand</h3>
         </a>
       </div>
-      <div class="col-12 col-lg-4 my-auto">
+      <div class="col-12 col-lg-4 my-auto py-1 py-lg-0">
         <form method="" action="">
           <div class="input-group w-100">
             <input class="form-control border-black rounded-0" type="text" name="q" placeholder="Search the site">
@@ -99,9 +103,9 @@
                 <div><i class="fas fa-shopping-cart fa-lg"></i></div>
                 <p class="my-0">
                   {% if grand_total %}
-                  ${{ grand_total|floatformat:2 }}
+                  £{{ grand_total|floatformat:2 }}
                   {% else %}
-                  $0.00
+                  £0.00
                   {% endif %}
                 </p>
               </div>
@@ -110,6 +114,16 @@
         </ul>
       </div>
     </div>
+    <div class="row bg-white">
+      <nav class="navbar navbar-expand-lg navbar-light w-100">
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#main-nav" aria-controls="main-nav" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+          </button>
+          <!--includes to mobile and main nave navigation htmls.-->
+          {% include 'includes/mobile-top-header.html' %}
+          {% include 'includes/main-nav.html' %}
+      </nav>
+  </div>
   </header>
   {% if messages %}
   <div class="message-container"></div>
