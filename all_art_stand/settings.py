@@ -46,9 +46,9 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     # via social media log in
     'home',
-    'directory.apps.DirectoryConfig',
-    'gallery.apps.GalleryConfig',
-    'eCommerce.apps.EcommerceConfig',
+    'directory',
+    'gallery',
+    'eCommerce',
 ]
 
 MIDDLEWARE = [

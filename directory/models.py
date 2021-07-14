@@ -18,7 +18,8 @@ class Person(models.Model):
         max_length=3,
         choices=ACCOUNT_TYPE,
     )
-    email = models.EmailField
+    profile_image = models.ImageField(null=True, blank=True)
+    email = models.EmailField(max_length=254, null=False, blank=False)
 
     def __str__(self):
         return self.first_name
