@@ -24,6 +24,7 @@ urlpatterns = [
     path('directory/', include('directory.urls')),
     path('eCommerce/', include('eCommerce.urls')),
     path('gallery/', include('gallery.urls')),
+    path('basket/', include('basket.urls')),
     path('', include('home.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 # static files path not to be out inside of the url patterns list

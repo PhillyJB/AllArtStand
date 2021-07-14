@@ -1,4 +1,6 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, redirect, reverse, get_object_or_404
+from django.contrib import messages
+from django.db.models import Q
 from .models import Art_Pieces
 
 
@@ -7,9 +9,22 @@ def all_art_pieces(request):
 
     # to return all art pieces from the db.:
     all_art = Art_Pieces.objects.all()
+    query = None
+
+    if request.GET:
+        if 'q' in request.GET:
+            query = request.GET['q']
+            if not query:
+                messages.error(request, "You didnt enter any search criteria!")
+                return redirect(reverse('gallery'))
+
+            queries = Q(title__icontains=query) | Q(category__icontains=query)
+            all_art = all_art.filter(queries)
+
     # we add them to the context so are art pieces are available on template
     context = {
         'all_art': all_art,
+        'search_art': query,
     }
 
     return render(request, 'gallery/gallery.html', context)
