@@ -10,8 +10,22 @@ def all_art_pieces(request):
     # to return all art pieces from the db.:
     all_art = Art_Pieces.objects.all()
     query = None
+    sort = None
+    direction = None
 
     if request.GET:
+        if 'sort' in request.GET:
+            sortkey = request.GET['sort']
+            sort = sortkey
+            if sortkey == 'name':
+                sortkey = 'lower_name'
+                all_art = all_art.annotate(lower_name=Lower('name'))
+            if 'direction' in request.GET:
+                direction = request.GET['direction']
+                if direction == 'desc':
+                    sortkey = f'-{sortkey}'
+            all_art = all_art.order_by(sortkey)
+
         if 'q' in request.GET:
             query = request.GET['q']
             if not query:
@@ -43,10 +57,13 @@ def all_art_pieces(request):
             queries = Q(title__icontains=query) | Q(category__icontains=query)
             all_art = all_art.filter(queries)
 
+    current_sorting = f'{sort}_{direction}'
+
     # we add them to the context so are art pieces are available on template
     context = {
         'all_art': all_art,
         'search_art': query,
+        'current_sorting': current_sorting,
     }
 
     return render(request, 'gallery/gallery.html', context)
