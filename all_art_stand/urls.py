@@ -22,10 +22,10 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('allauth.urls')),
     path('directory/', include('directory.urls')),
-    path('eCommerce/', include('eCommerce.urls')),
     path('gallery/', include('gallery.urls')),
     path('bag/', include('bag.urls')),
-    path('basket/', include('basket.urls')),
     path('', include('home.urls')),
+    path('profile/', include('profiles.urls')),
+    path('checkout/', include('checkout.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 # static files path not to be out inside of the url patterns list
