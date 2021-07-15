@@ -5,7 +5,7 @@ from .models import Art_Pieces
 
 
 def all_art_pieces(request):
-    """ A view to show all artwork, including sorting and serch queries"""
+    """ A view to show all artwork, including sorting and search queries"""
 
     # to return all art pieces from the db.:
     all_art = Art_Pieces.objects.all()
@@ -17,6 +17,28 @@ def all_art_pieces(request):
             if not query:
                 messages.error(request, "You didnt enter any search criteria!")
                 return redirect(reverse('gallery'))
+
+            # TODO: This is a hack. Lookups with Q objects are probably not
+            # ideal for seacrhing based on category due to the
+            # unfrienedly category name i.e. PPLE etc.
+            # for examples on what Q objects permit check out.
+            # https://github.com/django/django/blob/main/tests/or_lookups/
+            # tests.py
+            # Filtering on category based on a checkbox is a better approach
+            # Suggestion to refactor this: place the query translation code
+            # outside of view. View shouldn't do "real" work, just handling and
+            # returnig http
+
+            if query.lower() == "people":
+                query = Art_Pieces.PEOPLE
+            elif query.lower() == "animal":
+                query = Art_Pieces.ANIMAL
+            elif query.lower() == "location":
+                query = Art_Pieces.LOCATIONS
+            elif query.lower() == "objects":
+                query = Art_Pieces.OBJECTS
+            elif query.lower() == "building":
+                query = Art_Pieces.BUILDINGS
 
             queries = Q(title__icontains=query) | Q(category__icontains=query)
             all_art = all_art.filter(queries)
