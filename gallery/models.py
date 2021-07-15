@@ -20,8 +20,7 @@ class Art_Pieces(models.Model):
     ]
 
     artist = models.ForeignKey(Artist, on_delete=models.CASCADE)
-    # TODO: why CASCADE artist foreign key on delete instead of SET_NULL???
-    # category = models.ForeignKey('Artwork_Cat', on_delete=models.CASCADE, 
+    # category = models.ForeignKey('Artwork_Cat', on_delete=models.CASCADE,
     # null=False, blank=False)
 
     category = models.CharField(
