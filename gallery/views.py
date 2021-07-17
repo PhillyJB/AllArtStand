@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, reverse, get_object_or_404
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 
 from .models import Art_Pieces
@@ -85,8 +86,13 @@ def art_detail(request, art_piece_id):
     return render(request, 'gallery/art_detail.html', context)
 
 
+@login_required
 def add_art(request):
     """ Add a product to the store """
+    if not request.user.is_superuser:
+        messages.error(request, 'Sorry, only store owners can do that.')
+        return redirect(reverse('home'))
+
     if request.method == 'POST':
         form = Art_PiecesForm(request.POST, request.FILES)
         if form.is_valid():
@@ -107,8 +113,12 @@ def add_art(request):
     return render(request, template, context)
 
 
+@login_required
 def edit_art(request, art_piece_id):
     """Edit art piece in the store"""
+    if not request.user.is_superuser:
+        messages.error(request, 'Sorry, only store owners can do that.')
+        return redirect(reverse('home'))
 
     art_piece = get_object_or_404(Art_Pieces, pk=art_piece_id)
     if request.method == 'POST':
@@ -132,8 +142,13 @@ def edit_art(request, art_piece_id):
     return render(request, template, context)
 
 
+@login_required
 def delete_art(request, art_piece_id):
     """ Delete an art pieve from the store """
+    if not request.user.is_superuser:
+        messages.error(request, 'Sorry, only store owners can do that.')
+        return redirect(reverse('home'))
+
     art_piece = get_object_or_404(Art_Pieces, pk=art_piece_id)
     art_piece.delete()
     messages.success(request, 'Art piece deleted!')
