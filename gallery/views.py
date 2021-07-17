@@ -1,7 +1,9 @@
 from django.shortcuts import render, redirect, reverse, get_object_or_404
 from django.contrib import messages
 from django.db.models import Q
+
 from .models import Art_Pieces
+from .forms import Art_PiecesForm
 
 
 def all_art_pieces(request):
@@ -81,3 +83,58 @@ def art_detail(request, art_piece_id):
     }
 
     return render(request, 'gallery/art_detail.html', context)
+
+
+def add_art(request):
+    """ Add a product to the store """
+    if request.method == 'POST':
+        form = Art_PiecesForm(request.POST, request.FILES)
+        if form.is_valid():
+            art = form.save()
+            messages.success(request, 'Successfully added art piece!')
+            return redirect(reverse('art_detail', args=[art.id]))
+        else:
+            messages.error(
+                request, 'Failed to add art piece. Please ensure the form is valid.')
+    else:
+        form = Art_PiecesForm()
+
+    template = 'gallery/add_art.html'
+    context = {
+        'form': form,
+    }
+
+    return render(request, template, context)
+
+
+def edit_art(request, art_piece_id):
+    """Edit art piece in the store"""
+
+    art_piece = get_object_or_404(Art_Pieces, pk=art_piece_id)
+    if request.method == 'POST':
+        form = Art_PiecesForm(request.POST, request.FILES, instance=art_piece)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Successfully updated art piece!')
+            return redirect(reverse('art_detail', args=[art_piece.id]))
+        else:
+            messages.error(request, 'Failed to update art piece. Please ensure the form is valid.')
+    else:
+        form = Art_PiecesForm(instance=art_piece)
+        messages.info(request, f'You are editing {art_piece.name}')
+
+    template = 'gallery/edit_art.html'
+    context = {
+        'form': form,
+        'art_piece': art_piece,
+    }
+
+    return render(request, template, context)
+
+
+def delete_art(request, art_piece_id):
+    """ Delete an art pieve from the store """
+    art_piece = get_object_or_404(Art_Pieces, pk=art_piece_id)
+    art_piece.delete()
+    messages.success(request, 'Art piece deleted!')
+    return redirect(reverse('gallery'))
