@@ -32,12 +32,3 @@ class Person(models.Model):
 class Artist(Person):
     def __str__(self):
         return self.first_name
-
-
-class Customer(Person):
-    # TODO Add Payment  from eCommerce app
-    # This should be nullable not all customers may wish to store such detalis
-    # Also consder the possibity of guest check out facility
-
-    def __str__(self):
-        return self.first_name
