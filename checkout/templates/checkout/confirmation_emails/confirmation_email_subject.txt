@@ -1,0 +1,1 @@
+All Art Stand Confirmation for Order Number {{ order.order_number}}

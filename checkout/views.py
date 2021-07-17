@@ -1,4 +1,3 @@
-  
 from django.shortcuts import render, redirect, reverse, get_object_or_404, HttpResponse
 from django.views.decorators.http import require_POST
 from django.contrib import messages
@@ -7,7 +6,7 @@ from django.conf import settings
 from .forms import OrderForm
 from .models import Order, OrderLineItem
 
-from products.models import Product
+from gallery.models import Art_Pieces
 from profiles.models import UserProfile
 from profiles.forms import UserProfileForm
 from bag.contexts import bag_contents
@@ -61,11 +60,11 @@ def checkout(request):
             order.save()
             for item_id, item_data in bag.items():
                 try:
-                    product = Product.objects.get(id=item_id)
+                    item = Art_Pieces.objects.get(id=item_id)
                     if isinstance(item_data, int):
                         order_line_item = OrderLineItem(
                             order=order,
-                            product=product,
+                            art_item=item,
                             quantity=item_data,
                         )
                         order_line_item.save()
@@ -73,12 +72,12 @@ def checkout(request):
                         for size, quantity in item_data['items_by_size'].items():
                             order_line_item = OrderLineItem(
                                 order=order,
-                                product=product,
+                                item=item,
                                 quantity=quantity,
                                 product_size=size,
                             )
                             order_line_item.save()
-                except Product.DoesNotExist:
+                except Art_Pieces.DoesNotExist:
                     messages.error(request, (
                         "One of the products in your bag wasn't found in our database. "
                         "Please call us for assistance!")
@@ -96,7 +95,7 @@ def checkout(request):
         bag = request.session.get('bag', {})
         if not bag:
             messages.error(request, "There's nothing in your bag at the moment")
-            return redirect(reverse('products'))
+            return redirect(reverse('gallery'))
 
         current_bag = bag_contents(request)
         total = current_bag['grand_total']
