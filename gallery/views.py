@@ -121,6 +121,7 @@ def edit_art(request, art_piece_id):
         return redirect(reverse('home'))
 
     art_piece = get_object_or_404(Art_Pieces, pk=art_piece_id)
+    print(art_piece)
     if request.method == 'POST':
         form = Art_PiecesForm(request.POST, request.FILES, instance=art_piece)
         if form.is_valid():
@@ -131,7 +132,7 @@ def edit_art(request, art_piece_id):
             messages.error(request, 'Failed to update art piece. Please ensure the form is valid.')
     else:
         form = Art_PiecesForm(instance=art_piece)
-        messages.info(request, f'You are editing {art_piece.name}')
+        messages.info(request, f'You are editing {art_piece.title}')
 
     template = 'gallery/edit_art.html'
     context = {
